@@ -114,3 +114,11 @@ resource "aws_security_group_rule" "all_outbound_access" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "upnp_inbound_access" {
+  from_port         = 5000
+  to_port           = 5000
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  type              = "ingress"
+  security_group_id = "${aws_security_group.IEsg.id}"
+}
