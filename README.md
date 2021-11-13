@@ -10,3 +10,5 @@ You will need to have python and flask installed.
 
 Command to run:
 python3 app.py
+
+#Moved app to basic-flask-app directory
