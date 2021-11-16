@@ -1,0 +1,8 @@
+- name: run roles on ec2
+  hosts: localhost
+  become: true
+  roles:
+  - apache
+  - prometheus
+  - node_exporter
+  
