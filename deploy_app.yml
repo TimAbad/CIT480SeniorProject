@@ -1,0 +1,60 @@
+---
+- hosts: all
+  become: true
+  tasks:
+   - name: install apache2
+     apt: name=apache2 update_cache=yes state=latest
+
+   - name: Install packages
+     apt:
+       pkg:
+       - python3-pip
+       - libapache2-mod-wsgi-py3
+
+   - name: Clone repo
+     ansible.builtin.git:
+      repo: https://github.com/TimAbad/CIT480SeniorProject.git
+      dest: /home/ubuntu/CIT480SeniorProject
+      force: yes
+
+   - name: Copy basic-flask-app directory to home directory
+     copy: remote_src=True src=/home/ubuntu/CIT480SeniorProject/basic-flask-app dest=/home/ubuntu
+
+   - name: Install specified python requirements
+     pip:
+       requirements: /home/ubuntu/CIT480SeniorProject/basic-flask-app/requirements.txt
+
+   - name: Get Public IP of EC2
+     get_url:
+       url: http://checkip.amazonaws.com
+       dest: /home/ubuntu/hosts
+
+   - name: Get ip from hosts file
+     slurp:
+       src: /home/ubuntu/hosts
+     register: remote_content_encoded
+
+   - name: Decode remote content
+     set_fact:
+       remote_content: "{{remote_content_encoded.content | b64decode}}"
+
+   - name: Replace text in file
+     ansible.builtin.replace:
+      path: /home/ubuntu/basic-flask-app/basic-flask-app.conf
+      regexp: '54.160.181.50'
+      replace: "{{ remote_content }}"
+
+   - name: Copy basic-flask-app.conf to sites-available
+     copy: remote_src=True src=/home/ubuntu/basic-flask-app/basic-flask-app.conf dest=/etc/apache2/sites-available
+
+   - name: Copy app to /var/www
+     copy: remote_src=True src=/home/ubuntu/basic-flask-app dest=/var/www
+
+   - name: Enable site
+     shell: /usr/sbin/a2ensite basic-flask-app
+     notify:
+        - restart apache2
+ 
+  handlers:
+   - name: restart apache2
+     service: name=apache2 state=restarted
