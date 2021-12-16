@@ -58,7 +58,7 @@ pairs=[(country, active) for country, active in zip(cdf.index,cdf['active'])]
 
 #Create map using folium
 m=folium.Map(location=[34.223334,-82.461707],
-	tiles='Stamen toner',
+	tiles='Stamen terrain',
 	zoom_start=8)
 #Create cirles around confirmed cases
 def circle_maker(x):
