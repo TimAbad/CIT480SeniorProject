@@ -12,7 +12,7 @@ resource "aws_key_pair" "IEkeys" {
 
 resource "aws_instance" "IEinstance" {
   count = 2
-  ami                    = "ami-09889d8d54f9e0a0e"
+  ami                    = "ami-036d46416a34a611c"
   instance_type          = "${var.instance_type}"
   vpc_security_group_ids = ["${var.security_group}"]
   key_name               = "${aws_key_pair.IEkeys.id}"
