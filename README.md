@@ -32,3 +32,26 @@ http://127.0.0.1:5000
 
 ##Notes##
 #Moved app to basic-flask-app directory
+
+###CIT481 Spring 2022:########################################
+We have moved application development from flask to streamlit.
+Streamlit gives us a range of visualization options that work well with our covid data set.
+Streamlit also allowed us to develop our front end with user interaction in mind:
+
+-We now have the option for users to select individual countries and display relevant covid data about that specific country using a bar chart.
+-We also now have the option to display country-wise covid data using a pie chart and gives the user a range of countries to select from.
+-We have included a line chart as well which displays our covid data set using X and Y ranges for country specific covid data.
+-A table has also been included in lieu of the geographic map from last semester which ranks the countries' infection rate from high to low.
+
+The application is located in the dashboard/ folder.
+To run the application the requirements must first be installed (requirements.txt)
+
+How to use PIP to install application requirements:
+sudo -H pip3 install -r requirements.txt
+
+Command to run the application:
+streamlit run app.py
+
+This will create a running web application on the localhost:
+http://127.0.0.1:8501
+
