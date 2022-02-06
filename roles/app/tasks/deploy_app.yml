@@ -1,0 +1,98 @@
+---
+- hosts: all
+  become: true
+  tasks:
+   - name: install apache2
+     apt: name=apache2 update_cache=yes state=latest
+
+   - name: enable mods
+     apache2_module:
+       name: "{{item}}"
+       state: present
+     loop:
+        - rewrite
+        - proxy
+        - proxy_http
+     notify:
+        - restart apache2
+
+   - name: Clone Application from Repository
+     ansible.builtin.git:
+      repo: https://github.com/TimAbad/dashboard.git
+      dest: /home/ubuntu/dashboard
+      force: yes
+
+   - name: Install Python Package Manager
+     apt:
+       pkg:
+       - python3-pip
+
+   - name: Install Application Libraries (This will take some time)
+     pip:
+       requirements: /home/ubuntu/dashboard/requirements.txt
+
+   - name: Get Public IP of EC2 and save to hosts file
+     get_url:
+       url: http://checkip.amazonaws.com
+       dest: /home/ubuntu/hosts
+
+   - name: Read Public IP of EC2 and encode
+     slurp:
+       src: /home/ubuntu/hosts
+     register: remote_content_encoded
+
+   - name: Decode remote content
+     set_fact:
+       remote_content: "{{remote_content_encoded.content | b64decode}}"
+
+   - name: Insert Public IP of EC2 in Virtual Host File
+     ansible.builtin.replace:
+      path: /home/ubuntu/dashboard/dashboard.conf
+      regexp: 'CHANGEME'
+      replace: "{{ remote_content }}"
+
+   - name: Copy Virtual Host File to sites-available directory
+     copy: remote_src=True src=/home/ubuntu/dashboard/dashboard.conf dest=/etc/apache2/sites-available
+
+   - name: Copy Application to /var/www
+     copy: remote_src=True src=/home/ubuntu/dashboard dest=/var/www
+
+   - name: Enable Site
+     shell: /usr/sbin/a2ensite dashboard
+     notify:
+        - restart apache2
+
+   - name: Enable port forwarding using IPTables
+     shell: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8501
+
+   - name: Install the service
+     copy:
+       src: /home/ubuntu/dashboard/rundashboard.service
+       dest: /etc/systemd/system
+       owner: root
+       group: root
+       mode: '0644'
+       remote_src: yes
+
+   - name: Install the shell script
+     copy:
+       src: /home/ubuntu/dashboard/rundashboard.sh
+       dest: /usr/bin/
+       owner: root
+       group: root
+       mode: '0755'
+       remote_src: yes
+
+   - name: Stop the service if it is already running
+     systemd:
+       name: rundashboard
+       state: stopped
+
+   - name: Start the service
+     systemd:
+       name: rundashboard
+       state: started 
+ 
+  handlers:
+   - name: restart apache2
+     service: name=apache2 state=restarted
