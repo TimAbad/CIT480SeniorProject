@@ -80,7 +80,7 @@
       dest: /etc/systemd/system/prometheus.service
   - name: Start prometheus
     systemd:
-    state: started
-    name: prometheus
-    daemon_reload: yes
-    enabled: yes
+      state: started
+      name: prometheus
+      daemon_reload: yes
+      enabled: yes

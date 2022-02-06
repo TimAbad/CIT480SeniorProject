@@ -1,5 +1,5 @@
 ---
-- name: Install nessesary package
+- name: Install necessary package
   apt: 
       name: apt-transport-https
       state: present

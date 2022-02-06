@@ -36,15 +36,15 @@
       dest: /etc/systemd/system/node_exporter.service
   - name: Start node_exporter
     systemd:
-    state: started
-    name: node_exporter
-    daemon_reload: yes
-    enabled: yes
+      state: started
+      name: node_exporter
+      daemon_reload: yes
+      enabled: yes
   - name: Copy file
     copy:
       src: /home/ubuntu/roles/node_exporter/files/prometheus2.yml
       dest: /etc/prometheus/prometheus.yml
   - name: Restart Prometheus
     systemd:
-    name: prometheus
-    state: restarted
+      name: prometheus
+      state: restarted
