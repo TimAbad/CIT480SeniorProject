@@ -115,8 +115,8 @@ resource "aws_security_group_rule" "all_outbound_access" {
 }
 
 resource "aws_security_group_rule" "upnp_inbound_access" {
-  from_port         = 5000
-  to_port           = 5000
+  from_port         = 8501
+  to_port           = 8501
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   type              = "ingress"
