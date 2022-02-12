@@ -6,10 +6,10 @@ output "aws_internet_gateway" {
 	value = "${aws_internet_gateway.IEgw.id}"
 }
 
-output "security_group" {
+/* output "security_group" {
 	value = "${aws_security_group.IEsg.id}"
 }
-
+*/
 output "public_subnets" {
 	value = "${aws_subnet.public_subnet.*.id}"
 }
