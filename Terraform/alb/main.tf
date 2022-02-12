@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "IE_target_group" {
 	vpc_id = "${var.vpc_id}"
 }
 
-resource "aws_lb_target_group_attachment" "IE_tg_attach1" {
+/* resource "aws_lb_target_group_attachment" "IE_tg_attach1" {
 	target_group_arn = "${aws_lb_target_group.IE_target_group.arn}"
 	target_id = "${var.instance1_id}"
 	port = 80
@@ -32,7 +32,7 @@ resource "aws_lb_target_group_attachment" "IE_tg_attach2" {
         port = 80
 
 }
-
+*/
 resource "aws_lb" "IE_aws_alb" {
 	name = "IE-alb"
 	internal = false
