@@ -82,7 +82,7 @@ resource "aws_route_table_association" "private_subnet_ass" {
   depends_on     = [aws_default_route_table.private_route, aws_subnet.private_subnet]
 }
 
-resource "aws_security_group" "IEsg" {
+/* resource "aws_security_group" "IEsg" {
   name   = "IEsg"
   vpc_id = "${aws_vpc.IEvpc.id}"
 }
@@ -115,8 +115,8 @@ resource "aws_security_group_rule" "all_outbound_access" {
 }
 
 resource "aws_security_group_rule" "upnp_inbound_access" {
-  from_port         = 5000
-  to_port           = 5000
+  from_port         = 8501
+  to_port           = 8501
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   type              = "ingress"
@@ -149,3 +149,4 @@ resource "aws_security_group_rule" "prometheus_inbound_access" {
   type              = "ingress"
   security_group_id = "${aws_security_group.IEsg.id}"
 }
+*/

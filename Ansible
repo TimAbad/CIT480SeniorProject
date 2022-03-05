@@ -1,0 +1,37 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  
+  tasks:
+    - name: Install latest version of apache2
+      apt: name=apache2 update_cache=yes state=latest
+    # Enable the apache2 module rewrite
+    - apache2_module:
+        state: present
+        name: rewrite
+    # Enable the apache2 module headers
+    - apache2_module:
+         state: present
+         name: headers
+    # Enable the apache2 module expires
+    - apache2_module:
+         state: present
+         name: expires
+    # Enable the apache2 module macro
+    - apache2_module:
+        state: present
+        name: macro
+    # Enable the apache2 module macro
+    - name: Install openssl package
+      yum: name=openssl state=latest
+    # Enable the apache2 wsgi
+    - name: Enable the Apache2 module wsgi
+      community.general.apache2_module:
+         state: present
+         name: wsgi   
+      notify:
+      - restart apache2
+      handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted

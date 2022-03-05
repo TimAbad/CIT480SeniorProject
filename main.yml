@@ -1,8 +1,8 @@
 - name: run roles on ec2
-  hosts: localhost
+  hosts: all
   become: true
   roles:
-  - apache
+  - app
   - prometheus
   - node_exporter
   - grafana

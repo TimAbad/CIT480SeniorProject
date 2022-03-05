@@ -1,5 +1,5 @@
 ---
-- name: Install nessesary package
+- name: Install necessary package
   apt: 
       name: apt-transport-https
       state: present
@@ -20,8 +20,18 @@
       state: present
       update_cache: yes
 
+- name: Copy grafana dashboard file
+  copy: src=/home/ubuntu/roles/grafana/provisioning/dashboards/node-exporter-full_rev26.json dest=/etc/grafana/provisioning/dashboards
+
+- name: Copy grafana datasource file
+  copy: src=/home/ubuntu/roles/grafana/provisioning/datasources/datasource.yml dest=/etc/grafana/provisioning/datasources
+
+- name: Copy grafana dashboard file
+  copy: src=/home/ubuntu/roles/grafana/provisioning/dashboards/dashboard.yml dest=/etc/grafana/provisioning/dashboards
+
 - name: Enable and start grafana service
   service:
     name: grafana-server
     enabled: yes
     state: started
+

@@ -1,4 +1,4 @@
-provider "aws" {
+/* provider "aws" {
 	region = "us-west-2"
 }
 
@@ -23,3 +23,4 @@ resource "aws_instance" "IEinstance" {
 data "template_file" "init" {
   template = "${file("${path.module}/userdata.tpl")}"
 }
+*/

@@ -1,5 +1,6 @@
 variable "vpc_id" {}
-/* variable "instance1_id" {}
-variable "instance2_id" {} */
+variable "target_group_arn" {}
 variable "subnet1" {}
 variable "subnet2" {}
+variable "my_public_key" {}
+
