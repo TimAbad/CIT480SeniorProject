@@ -22,9 +22,9 @@
         state: present
         name: macro
     # Enable module wsgi
-    - apache2_module:
-        state: present
-        name: wsgi
+    #- apache2_module:
+     #   state: present
+      #  name: wsgi
       notify:
          - restart apache2
   handlers:

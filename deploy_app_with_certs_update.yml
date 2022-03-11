@@ -1,0 +1,79 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - server_hostname: internetexplorer.com
+    - key_size: 4096
+    - passphrase: # Set if you want passphrase
+    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+    - country_name: US
+    - email_address: admin@internetexplorer.com
+    - organization_name: internetexplorer
+  tasks:
+  - name: Install latest version of apache2
+    apt: name=apache2 update_cache=yes state=latest
+    # Enable the apache2 module rewrite
+  - apache2_module:
+      state: present
+      name: rewrite
+
+    # Enable the apache2 module headers
+  - apache2_module:
+      state: present
+      name: headers
+
+    # Enable the apache2 module expires
+  - apache2_module:
+      state: present
+      name: expires
+
+    # Enable the apache2 module macro
+  - apache2_module:
+      state: present
+      name: macro
+
+    # Enable the apache2 proxy modules
+  - name: Enable proxy related modules
+    apache2_module: name={{ item }} state=present
+    with_items:
+    - headers
+    - proxy_connect
+    - proxy_wstunnel
+    - ssl
+    - vhost_alias
+  - name: install pip3
+    apt: name=python3-pip state=present
+       
+  - name: install modules
+    pip:
+      state: present
+      name: pyopenssl
+  
+  - name: Generate an OpenSSL private key
+    openssl_privatekey:
+      path: /etc/ssl/private/{{ server_hostname }}_privkey.pem
+      size: "{{ key_size }}"
+      type: "{{ key_type }}"
+      backup: yes
+    
+  - name: Generate an OpenSSL Certificate Signing Request with Subject information
+    openssl_csr:
+      path: "/etc/ssl/certs/{{ server_hostname }}.csr"
+      privatekey_path: "/etc/ssl/certs/{{ server_hostname }}_privkey.pem"
+      country_name: US
+      organization_name: internetexplorer
+      email_address: admin@internetexplorer.com
+      common_name: www.internetexplorer.com
+
+  - name: Generate a Self Signed OpenSSL certificate
+    openssl_certificate:
+      path: "/etc/ssl/certs/{{ server_hostname }}_cert.pem"
+      privatekey_path: "/etc/ssl/private/{{ server_hostname }}_privkey.pem"
+      csr_path: /etc/ssl/csr/www.internetexplorer.com.csr
+      provider: selfsigned
+
+  - name: restart apache2
+    service: name=apache2 state=restarted
+  
+
+   
