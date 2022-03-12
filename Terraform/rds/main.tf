@@ -7,14 +7,14 @@ resource "aws_db_instance" "IE-sql" {
   engine                  = "mysql"
   engine_version          = "5.7"
   multi_az                = true
-  storage_type            = "gp2"
-  allocated_storage       = 20
+  storage_type            = "standard"
+  allocated_storage       = 10
   name                    = "ierds"
   username                = "admin"
-  password                = "admin123"
+  password                = "IEadmin022420"
   apply_immediately       = "true"
-  backup_retention_period = 10
-  backup_window           = "09:46-10:16"
+  backup_retention_period = 30
+  backup_window           = "10:00-11:00"
   db_subnet_group_name    = "${aws_db_subnet_group.IE-rds-db-subnet.name}"
   vpc_security_group_ids  = ["${aws_security_group.IE-rds-sg.id}"]
 }
@@ -51,7 +51,7 @@ resource "aws_security_group_rule" "outbound_rule" {
 data "aws_kms_secret" "rds" {
   secret {
     name = "db-password"
-    payload = "AQICAHibS2rwth4UleeAxsSEfxgwqkPtD0jzkRM/Ez91Y7cbvwEHP2YRcuplZp/H7GqmIuXVAAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMps5PwT/x3nCnBMfTAgEQgCNd+Y6q9KBZbIX8JZlqP7EDErQLuaBLh6mKaYBz+5blxWstwQ=="
+    payload = "hash"
   }
 }
 */
