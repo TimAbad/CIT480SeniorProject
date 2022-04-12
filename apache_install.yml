@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+   - name: install apache2
+     apt: name=apache2 update_cache=yes state=latest
+
+   - name: enable mods
+     apache2_module:
+       name: "{{item}}"
+       state: present
+     loop:
+        - rewrite
+        - proxy
+        - proxy_http
+     notify:
+        - restart apache2
+
+  handlers:
+   - name: restart apache2
+     service: name=apache2 state=restarted
