@@ -40,3 +40,9 @@ module "rds" {
   rds_subnet2 = module.vpc.private_subnet2
   vpc_id      = module.vpc.aws_vpc_id
 }
+
+module "route53" {
+  source   = "./route53"
+  arecord  = ["34.220.94.76", "52.33.201.250"]
+  vpc_id   = "${module.vpc.aws_vpc_id}"
+}
