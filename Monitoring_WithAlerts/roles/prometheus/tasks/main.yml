@@ -1,0 +1,90 @@
+---
+  - name: Create prometheus user
+    user: 
+      name: prometheus
+      state: present
+      shell: /bin/bash
+      system: no 
+      createhome: yes
+  - name: Create directory
+    file:
+        path: "{{ item }}"
+        state: directory
+        owner: prometheus
+        group: prometheus
+    with_items: 
+        - /etc/prometheus
+        - /var/lib/prometheus
+  - name: Unarchive prometheus
+    unarchive:
+      src: https://github.com/prometheus/prometheus/releases/download/v2.21.0/prometheus-2.21.0.linux-amd64.tar.gz
+      dest: /home/ubuntu
+      remote_src: yes
+  - name: Copy file
+    copy:
+      src: /home/ubuntu/prometheus-2.21.0.linux-amd64/prometheus
+      dest: /usr/local/bin/
+  - name: Copy file
+    copy:
+      src: /home/ubuntu/prometheus-2.21.0.linux-amd64/promtool
+      dest: /usr/local/bin/
+  - name: Change file permission
+    file:
+      path: /usr/local/bin/prometheus
+      owner: prometheus
+      group: prometheus
+      mode: '755'
+  - name: Change file permission
+    file:
+      path: /usr/local/bin/promtool
+      owner: prometheus
+      group: prometheus
+  - name: Copy file
+    copy:
+      src: /home/ubuntu/prometheus-2.21.0.linux-amd64/consoles
+      dest: /etc/prometheus
+  - name: Copy file
+    copy:
+      src: /home/ubuntu/prometheus-2.21.0.linux-amd64/console_libraries
+      dest: /etc/prometheus
+  - name: Change file permission
+    file:
+      path: /etc/prometheus/consoles
+      owner: prometheus
+      group: prometheus
+  - name: Change file permission
+    file:
+      path: /etc/prometheus/console_libraries
+      owner: prometheus
+      group: prometheus
+  - name: Delete unwanted files
+    file:
+      state: absent
+      path: /home/ubuntu/prometheus-2.21.0.linux-amd64
+  - name: Delete unwanted files
+    file:
+      state: absent
+      path: /home/ubuntu/prometheus-2.21.0.linux-amd64.tar.gz
+  - name: Copy file
+    copy:
+      src: "{{ role_path }}/files/prometheus.yml"
+      dest: /etc/prometheus/prometheus.yml
+  - name: Change file permission
+    file:
+      path: /etc/prometheus/prometheus.yml
+      owner: prometheus
+      group: prometheus
+  - name: Copy file
+    copy:
+      src: "{{ role_path }}/files/prometheus.service"
+      dest: /etc/systemd/system/prometheus.service
+  - name: alert config file
+    copy:
+      src: "{{ role_path }}/files/alert.rules.yml"
+      dest: /etc/prometheus/alert.rules.yml
+  - name: Start prometheus
+    systemd:
+      state: started
+      name: prometheus
+      daemon_reload: yes
+      enabled: yes
