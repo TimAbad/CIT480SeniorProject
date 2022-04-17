@@ -43,6 +43,6 @@ module "rds" {
 
 module "route53" {
   source   = "./route53"
-  arecord  = ["34.220.94.76", "52.33.201.250"]
+  arecord = module.autoScaling.ec2_global_ips
   vpc_id   = "${module.vpc.aws_vpc_id}"
 }
