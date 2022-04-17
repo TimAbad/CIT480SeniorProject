@@ -13,13 +13,13 @@ resource "aws_launch_configuration" "IE-launch-config" {
   instance_type   = "t2.micro"
   security_groups = ["${aws_security_group.IE-autoscale-sg.id}"]
   key_name               = "${aws_key_pair.IE_auto_keys.id}"
-/*  user_data = <<-EOF
-                   #!/bin/bash
-              apt-get update && apt-get install apache2 -y
+  user_data = <<-EOF
+              #!/bin/bash
+              apt update &&  apt install apache2 -y
               echo "Hello, from Terraform" > /var/www/html/index.html
               service apache2 start
               EOF
-*/
+
   lifecycle {
     create_before_destroy = true
   }
@@ -108,4 +108,8 @@ resource "aws_security_group_rule" "prometheus_inbound_access" {
   cidr_blocks       = ["0.0.0.0/0"]
   type              = "ingress"
   security_group_id = aws_security_group.IE-autoscale-sg.id
+}
+
+data "aws_instances" "nodes" {
+  depends_on = [ aws_autoscaling_group.IE-autoscale-group ]
 }
