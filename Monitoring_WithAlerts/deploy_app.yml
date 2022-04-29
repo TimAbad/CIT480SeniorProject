@@ -9,7 +9,7 @@
 
   vars:
     - server_hostname: internetexplorer.com
-    - key_size: 2048
+    - key_size: 4096
     - passphrase: # Set if you want passphrase
     - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
     - country_name: US
@@ -107,9 +107,6 @@
      notify:
         - restart apache2
 
-   - name: Enable port forwarding using IPTables
-     shell: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8501
-
    - name: Install the service
      copy:
        src: /home/ubuntu/dashboard/rundashboard.service
@@ -137,6 +134,8 @@
      systemd:
        name: rundashboard
        state: started 
+   - name: Disable default site
+     shell: a2dissite 000-default.conf
    - name: Restart Prometheus
      systemd:
        name: prometheus
