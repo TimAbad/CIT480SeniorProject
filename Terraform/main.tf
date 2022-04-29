@@ -46,3 +46,7 @@ module "route53" {
   arecord = module.autoScaling.ec2_global_ips
   vpc_id   = "${module.vpc.aws_vpc_id}"
 }
+
+module "iam" {
+	source = "./iam"
+}
