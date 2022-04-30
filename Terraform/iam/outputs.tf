@@ -13,3 +13,8 @@ output "kt_user_arn" {
 output "cr_user_arn" {
         value = "${aws_iam_user.ieuser.3.arn}"
 }
+
+
+output "password" {
+	value = aws_iam_user_login_profile.ieprofile.*.encrypted_password
+}
