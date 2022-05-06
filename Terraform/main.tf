@@ -33,6 +33,7 @@ module "autoScaling" {
   target_group_arn = module.alb.alb_target_group_arn
   my_public_key    = "/tmp/id_rsa.pub"
 }
+/*
 module "rds" {
   source      = "./rds"
   db_instance = "db.t2.micro"
@@ -40,6 +41,7 @@ module "rds" {
   rds_subnet2 = module.vpc.private_subnet2
   vpc_id      = module.vpc.aws_vpc_id
 }
+*/
 
 module "route53" {
   source   = "./route53"
@@ -47,6 +49,7 @@ module "route53" {
   vpc_id   = "${module.vpc.aws_vpc_id}"
 }
 
+/*
 module "iam" {
-	source = "./iam"
-}
+        source = "./iam"
+}*/

@@ -4,12 +4,12 @@ provider "aws" {
 
 resource "aws_lb_target_group" "IE_target_group" {
 	health_check {
-		interval = 10
+		interval = 300
 		path = "/"
 		protocol = "HTTP"
-		timeout = 5
-		healthy_threshold = 5
-		unhealthy_threshold = 2
+		timeout = 120
+		healthy_threshold = 2
+		unhealthy_threshold = 10
 		
 	}
 	name = "IE-tg-1"
@@ -75,6 +75,15 @@ resource "aws_security_group_rule" "inbound_http" {
   protocol          = "tcp"
   security_group_id = "${aws_security_group.IE_alb_sg.id}"
   to_port           = 80
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "inbound_https" {
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = "${aws_security_group.IE_alb_sg.id}"
+  to_port           = 443
   type              = "ingress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
