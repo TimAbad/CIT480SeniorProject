@@ -1,7 +1,7 @@
 # CIT480SeniorProject
 Project files for CIT480 Senior Design
 
-Covid API Tracking Appliation:
+Covid API Tracking Application:
 Our application tracks Covid data from a public API and displays an interactive map to the user 
 as well as displays a table of Covid statistics for the top 25 countries around the world.
 
